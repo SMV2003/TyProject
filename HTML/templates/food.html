@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{%block title%}Food{% endblock%}
+{% block style%}{%endblock%}
+{%block content%}
+<div name="search bar">
+<form action="{{ url_for('food')}}" method="post">
+<label for="Food">Search Food:</label>
+<input type="text" id="foodname" name="fname" placeholder="Enter Food Name">
+</form></div>
+FOODD
+<div name= "food_result">
+	
+</div>
+
+{% endblock%}

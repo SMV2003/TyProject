@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{%block title%}Home Page{% endblock%}
+{%block content%}<form action="{{ url_for('gfg')}}" method="post">
+<label for="Food">Search Food:</label>
+<input type="text" id="foodname" name="fname" placeholder="foodname">
+</form>{% endblock%}
+
+
