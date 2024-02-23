@@ -1,12 +1,27 @@
 {% extends "base.html" %}
 {%block title%}Food{% endblock%}
-{% block style%}{%endblock%}
+{% block style%}
+
+{%endblock%}
 {%block content%}
+<div name = "food navbar", >
+	<ul style="background-color:#28282B">
+  		<li><a href="{{ url_for('diary') }}">Diary</a></li>
+  		<li><a href="{{ url_for('food') }}">Search Food</a></li>
+  		<!--<li><a href="{{ url_for('exercise') }}">Exercise</a></li>
+  		<li><a href="{{ url_for('about') }}">About</a></li>-->
+	</ul>
+</div>
+
 <div name="search bar">
-<form action="{{ url_for('food')}}" method="post">
-<label for="Food">Search Food:</label>
-<input type="text" id="foodname" name="fname" placeholder="Enter Food Name">
-</form></div>
+	<form action="{{ url_for('food')}}" method="post">
+	<label for="Food">Search Food:</label>
+	<input type="text" id="foodname" name="fname" placeholder="Enter Food Name">
+	<label for="quantity">Serving Size in grams:</label>
+  	<input type="number" id="quantity" name="serving_size" min="1" max="2000">
+  	<input type="submit" value="Search">
+	</form>
+</div>
 FOODD
 <div name= "food_result">
 	

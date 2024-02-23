@@ -1,51 +1,6 @@
-from flask import Flask, redirect, url_for, render_template, request
-
-import noms
-key = open("D:\\E Drive\\Local Disk\\USDA_API_key.txt" , mode='r').read()
-client = noms.Client(key)
-
-def get_foundation_only(query):
-    y=[]
-    result_1=client.search_query(query)
-    for i in result_1.json['items']:
-        if i['dataType'] == 'Foundation':
-             y.append(i)
-    return y
-
-def get_fdcid(name):
-    food_list_rough = get_foundation_only(name)
-    fdcid = food_list_rough[0]['fdcId']
-    return fdcid
-    
-
-def create_dict(key,value):
-    food_dict=dict({})
-    food_dict[key]= value
-    return food_dict
-
-def extract_nutrients(food_dictionary):
-    food_object = client.get_foods(food_dictionary)
-    a = food_object[0].nutrients
-    for i in a:
-        if i['name'] == 'Protein':
-            protein = i['value']
-        elif  i['name'] == 'Fat':
-            fat = i['value']
-        elif  i['name'] == 'Carbs':
-            carbs = abs(i['value'])
-        elif  i['name'] == 'Calories':
-            calories = i['value']
-    return [calories,protein,carbs,fat]
-
-def runner_function(name,weight_in_g):
-    fdcid = get_fdcid(name)
-    food_diary=create_dict(str(fdcid),weight_in_g)
-    calories,protein,carbs,fat = extract_nutrients(food_diary)
-    if calories == 0.0:
-        calories = round(4*protein+4*carbs+9*fat,3)
-    print(f"Your food has {calories} calories\n{round(protein,3)}g of protein\n{round(carbs,3)}g of carbs\n{round(fat,3)}g of fats ")
-    return f"Your food has {calories} calories\n{round(protein,3)}g of protein\n{round(carbs,3)}g of carbs\n{round(fat,3)}g of fats "
-
+from flask import Flask, redirect, url_for, render_template, request,sessions
+from Foods.search_food import find_nutr_multiple_v2,find_nutr_single 
+import pdb
 
 app = Flask(__name__)
 
@@ -55,14 +10,16 @@ def gfg():
        # getting input with name = fname in HTML form
        foodname = request.form.get("fname")
        #print("food name: ",foodname)
-       return runner_function(foodname,100)
+       return find_nutr_single(foodname,100)
     return render_template("HomePage.html")
 
 @app.route('/food.html',methods =["GET", "POST"])
 def food():
 	if request.method == "POST":
 		foodname = request.form.get("fname")
-		return runner_function(foodname,100)
+		size = int(request.form.get("serving_size"))
+		#food_nutrients = runner_function(foodname,100)
+		return find_nutr_single(foodname,size)
 	return render_template("food.html")
 
 
@@ -80,10 +37,45 @@ def exercise():
 def about():
 	return render_template("about.html")
 
+@app.route('/food.html/diary.html',methods =["GET", "POST"])
+def diary():
+	protein = carbs = fat = calories = 0
+	if request.method == "POST":
+		
+		meal1 = request.form.get("diary_meal_1")
+		msize1 = request.form.get("meal_size1")
+		
+		meal2 = request.form.get("diary_meal_2")
+		msize2 = request.form.get("meal_size2")
+		
+		diary_flist = request.form.getlist("diary_meal_addn")
+		diary_flist.append(meal1)
+		diary_flist.append(meal2)
+		#diary_flist = [i.replace(" ","_") for i in diary_flist ]
+		
+		meal_slist = request.form.getlist("meal_size_list")
+		meal_slist.append(msize1)
+		meal_slist.append(msize2)
+		meal_slist = [int(i) for i in meal_slist ]
+
+		food_dict = {diary_flist[i]: meal_slist[i] for i in range(len(diary_flist))}
+		#food_dict = {meal1:msize1,meal2:msize2}
+		#pdb.set_trace()
+
+		nutr_dict = find_nutr_multiple_v2(food_dict)
+		for value in nutr_dict.values():
+			protein+=value[0]
+			carbs+=value[1]
+			fat+=value[2]
+			calories+=value[3]
+		#return f"Total Calories{calories}"
+
+
+	return render_template("diary.html",Calories=calories)
+
 
 
 
 if __name__ == "__main__":
 	app.run(debug = True)
-	#name = input("Enter name of food: ")
-	#runner_function(name,100)
+	

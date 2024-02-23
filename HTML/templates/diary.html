@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{%block title%}Diary{% endblock%}
+{% block style%}
+ol[name="foods"] li {
+  		float: initial ;
+  		font-family: "YouTube Sans","Roboto",sans-serif;
+		}
+ol[name="foods"] li input{
+	color: #333;
+}
+
+div[name= "food_result"]{
+	padding: 25px 16px 14px 200px;
+}
+
+div[name="calories"]{
+	padding: 25px 16px 14px 200px;
+	    background-color: #0f0f0f;
+}
+
+{%endblock%}
+{%block content%}
+
+
+<div name = "food navbar", >
+	<ul style="background-color:#28282B; ">
+  		<li><a href="{{ url_for('diary') }}">Diary</a></li>
+  		<li><a href="{{ url_for('food') }}">Search Food</a></li>
+  		<!--<li><a href="{{ url_for('exercise') }}">Exercise</a></li>
+  		<li><a href="{{ url_for('about') }}">About</a></li>-->
+	</ul>
+</div>
+Diaryy
+<div name="search bar">
+	<form action="{{ url_for('food')}}" method="post">
+	<label for="Food">Search Food:</label>
+	<input type="text" id="foodname" name="fname" placeholder="Enter Food Name">
+	</form>
+</div>
+
+<div name= "food_result">
+	<form action="{{url_for('diary')}}" method="post">
+		<ol name="foods" id = "meal" style="all: initial; color: white; list-style-type: none;">
+            <li>
+				<label>Meal 1:</label>
+				<input type="text" name="diary_meal_1" placeholder="Enter Food Name" >
+				<input type="number" name="meal_size1" min="1" max="2000" placeholder="Size in(g)">		
+			</li>
+			<li>
+				<label>Meal 2:</label>
+				<input type="text" name="diary_meal_2" placeholder="Enter Food Name">
+				<input type="number" name="meal_size2" min="1" max="2000" placeholder="Size in(g)">
+			</li>
+		</ol>
+		<br>
+		<input type="button" id="btn1" value="Add Meal">
+		<input type="submit" value="Search">
+	</form>
+	
+</div>
+<div name="calories" style="color: whitesmoke;">
+	<ul style="background-color: #0f0f0f;"><li><h3>Total Calories : </h3></li>
+		<li><h3> {{Calories}}</h3></li>
+	</ul>
+	
+	
+</div>
+
+<script>
+	var count = 3;
+	$(document).ready(function()
+	{
+  		$("#btn1").click(function()
+  			{
+    			/*$("ol[name=foods]").append(' <li><label>Meal '+count+':</label><input type="text" name="diary_meal_'+count+'" placeholder="Enter Food Name"></li>');*/
+    			$("ol[name=foods]").append(' <li><label>Meal '+count+':</label><input type="text" name="diary_meal_addn" placeholder="Enter Food Name"><input type="number"  name="meal_size_list" min="1" max="2000" placeholder="Size in(g)"></li>');
+    			count++;
+  			});
+  		
+	});
+
+</script>
+
+{% endblock%}
