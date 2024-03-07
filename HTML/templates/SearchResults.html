@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{%block title%}Search Result{% endblock%}
+{% block style%}
+table, th, td
+		{
+			<!--border: 1px solid black;-->
+      		border-collapse: collapse;
+      		padding: 20px;
+      		color: white;
+      		display: table-cell;
+  		
+      
+		}
+th{
+	text-align: left;
+	font-size: 26px;
+}
+.FoodResults{
+	display:table-cell;
+      	align-items: center;
+      }
+button{
+        border: none;
+        cursor: pointer;
+        appearance: none;
+        background-color: inherit;
+         transition: transform .7s ease-in-out;
+        margin-left:10px;
+
+
+      }
+.FoodResults{
+	background-image: linear-gradient(rgb(51, 35, 42,0.9),rgb(81, 98, 117,0.9)), url({{ url_for("static", filename="EatingFood2.jpg") }});
+	width:3925px;
+}
+
+{% endblock%}
+{%block content%}
+<div class="FoodResults">
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Calories</th>
+		<th>Protein</th>
+		<th>Fats</th>
+		<th>Carbs</th>
+	</tr>
+	
+	{% for i in range(num) %}
+	<!--<form action="{{url_for('add_food')}}" method="post" name="" onsubmit="return false">-->
+    <tr>
+        <td name="">{{ name[i] }}</td>
+        <td>{{ calories[i] }}</td>
+        <td>{{protein[i]}}</td>
+        <td>{{fats[i]}}</td>
+        <td>{{carbs[i]}}</td>
+        <td name="" hidden>{{ food_s }}</td>
+        
+        <td><form  method="post" action="/add_food"  >
+        	<input type="hidden" name="food_name" value="{{ name[i] }}">
+        	<input type="hidden" name="food_cal" value="{{ calories[i] }}">
+        	<input type="hidden" name="food_protein" value="{{ protein[i] }}">
+        	<input type="hidden" name="food_fats" value="{{ fats[i] }}">
+        	<input type="hidden" name="food_carbs" value="{{ carbs[i] }}">
+        	
+        	<button type="submit"  value="Add"  style="color: black;">
+        		<img src="{{url_for('static',filename='AddButton.png')}}">
+        	</button>
+        </form>
+        </td>
+    </tr>
+	<!--</form>-->
+    {% endfor %}
+<!--</form>-->
+</table>
+</div>
+
+
+{% endblock%}

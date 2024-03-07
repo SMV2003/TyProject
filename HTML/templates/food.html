@@ -1,30 +1,91 @@
 {% extends "base.html" %}
 {%block title%}Food{% endblock%}
 {% block style%}
+div[name="search bar"]{
+	color: white;
+	background-color: ;
+	align-items: centre;
+}
+label{
+	padding: 15px 0px 12px 12px;
+    font-size: 19px;
+}
+button{
+        border: none;
+        cursor: pointer;
+        appearance: none;
+        background-color: inherit;
+         transition: transform .7s ease-in-out;
+        margin-left:10px;
+
+
+      }
+      button:hover {
+  transform: rotate(360deg);
+}
+
+      img{
+            width: 35px;
+    		height: 35px
+        background-color: #0f0f0f;
+      }
+      input{
+      	color:black;
+      }
+      input[name="fname"]{
+      	border-radius: 60px;
+      	padding: 10px
+
+      }
+      input[name="serving_size"]{
+      		border-radius: 60px;
+      		padding: 10px
+      		
+      }
+      .SearchBar{
+      	display:flex;
+      	align-items: center;
+      }
+
+  .MainDivFood{
+background-image: linear-gradient(rgb(51, 51, 51,0.9),rgb(51, 51, 51,0.9)), url({{ url_for("static", filename="Food2v2.jpg") }});
+background-size: 1363px 737px;
+height:461px;
+
+background-repeat: no-repeat;
+}
+
+body{
+	background-color: #333;
+}
+  
 
 {%endblock%}
 {%block content%}
+<div class="MainDivFood">
+<!--
 <div name = "food navbar", >
 	<ul style="background-color:#28282B">
+
   		<li><a href="{{ url_for('diary') }}">Diary</a></li>
-  		<li><a href="{{ url_for('food') }}">Search Food</a></li>
+  		<li><a href="{{ url_for('food') }}">Search Food</a></li>-->
   		<!--<li><a href="{{ url_for('exercise') }}">Exercise</a></li>
   		<li><a href="{{ url_for('about') }}">About</a></li>-->
-	</ul>
+	<!--</ul>
 </div>
+-->
 
 <div name="search bar">
-	<form action="{{ url_for('food')}}" method="post">
-	<label for="Food">Search Food:</label>
-	<input type="text" id="foodname" name="fname" placeholder="Enter Food Name">
-	<label for="quantity">Serving Size in grams:</label>
-  	<input type="number" id="quantity" name="serving_size" min="1" max="2000">
-  	<input type="submit" value="Search">
+	<form class="SearchBar"action="{{ url_for('food')}}" method="post">
+	<label for="Food">Search Food</label>
+	<input type="text" id="foodname" name="fname" placeholder="Enter Food Name" required>
+	<label for="quantity">Serving Size in grams</label>
+  	<input type="number" id="quantity" name="serving_size" min="1" max="2000" required>
+  	<button type="submit" value="Search">
+  		<img src="{{url_for('static',filename='FoodSearch2.png')}}">
+  	</button>
 	</form>
 </div>
-FOODD
-<div name= "food_result">
-	
 </div>
 
 {% endblock%}

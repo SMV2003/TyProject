@@ -64,8 +64,10 @@ def find_nutr_single(name,weight_in_g):
     calories,protein,carbs,fat = extract_nutrients(food_diary)
     if calories == 0.0:
         calories = round(4*protein+4*carbs+9*fat,3)
-    print(f"Your food has {calories} calories\n{round(protein,3)}g of protein\n{round(carbs,3)}g of carbs\n{round(fat,3)}g of fats ")
-    return f"Your food has {calories} calories\n{round(protein,3)}g of protein\n{round(carbs,3)}g of carbs\n{round(fat,3)}g of fats "
+    #print(f"Your food has {calories} calories\n{round(protein,3)}g of protein\n{round(carbs,3)}g of carbs\n{round(fat,3)}g of fats ")
+    #return f"Your food has {calories} calories\n{round(protein,3)}g of protein\n{round(carbs,3)}g of carbs\n{round(fat,3)}g of fats "
+    protein,carbs,fat = round(protein,3),round(carbs,3),round(fat,3)
+    return [calories,protein,carbs,fat]
 
 
 def find_nutr_multiple(**kwargs):
@@ -115,6 +117,59 @@ def find_nutr_multiple_v2(mydict):
         value = [round(i,3) for i in (value[3],value[0],value[1],value[2])]
     req_dict[key] = value
     return nutrient_dict
+
+def find_calories_for_search(results):
+    calories = []
+    for j in results.json['items']:
+        for i in j['foodNutrients']:
+            if i['nutrientId']== 1008:
+                calories.append(i['value'])
+    return calories
+
+def search_food(foodname):
+    results = client.search_query(foodname)
+    description_of_foods = [i['description'] for i in results.json['items']]
+    #fdcid_of_foods = [i['fdcId'] for i in results.json['items']]   
+    calories,protein,fats,carbs = find_nutr_for_search(results)
+    #if len(description_of_foods)==len(fdcid_of_foods)==len(calories):
+        #count = len(calories)
+        #for name,cals in zip(description_of_foods,calories):
+            #print(name,cals,'Calories') 
+    return [calories,protein,fats,carbs,description_of_foods]
+
+def cross_mul(for_100,req_wt):
+    req_nutr = (req_wt*for_100)/100
+    return round(req_nutr,2)
+
+def find_nutr_for_search(results):
+    calories = []
+    carbs = []
+    fats = []
+    protein = []
+    
+    
+    for j in results.json['items']:
+        for i in j['foodNutrients']:
+            if i['nutrientId']== 1003:
+                protein.append(i['value'])
+            if i['nutrientId']== 1004:
+                fats.append(i['value'])
+            if i['nutrientId']== 1005:
+                carbs.append(i['value'])
+            if i['nutrientId']== 1008:
+                calories.append(i['value'])
+            
+    return calories,protein,fats,carbs
+
+def check_if_in_session(session,string_to_check,value,page):
+    
+    if string_to_check not in session:
+        if page == 'h':
+            session[string_to_check] = 0.0
+        else:
+            session[string_to_check] = value
+    else:
+        session[string_to_check] += value
 
 if __name__ == "__main__":
     name = input("Enter name = ")
