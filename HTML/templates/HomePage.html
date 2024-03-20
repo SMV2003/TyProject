@@ -1,25 +1,145 @@
 {% extends "base.html" %}
 {%block title%}Home Page{% endblock%}
-{%block content%}
-<h3>Welcome User</h3>
+{% block style%}
+.Stats{
+	color: whitesmoke;
+}
 
-<div  style="color: whitesmoke;">
-	<ul style="background-color: #0f0f0f;"><li><h4>Total Calories : </h4></li>
-		<li><h3> {{Calories}}</h3></li>
-	</ul>
-	<ul style="background-color: #0f0f0f;"><li><h4>Total Protein : </h4></li>
-		<li><h3> {{Protein}}</h3></li>
-	</ul>
-	<ul style="background-color: #0f0f0f;"><li><h4>Total Fats : </h4></li>
-		<li><h3> {{Fats}}</h3></li>
-	</ul>
-	<ul style="background-color: #0f0f0f;"><li><h4>Total Carbs : </h4></li>
-		<li><h3> {{Carbs}}</h3></li>
-	</ul>
-	<ul style="background-color: #0f0f0f;"><li><h4>Calories Burned : </h4></li>
-		<li><h3> {{Burnt}}</h3></li>
+.Stats_list{
+	background-color: initial;
+	float:left;
+	list-style-type: none;
+	
+}
+.Stats_list li{
+	padding: 10px 10px 10px 25px;
+	text-decoration: none;
+}
+.chartDiv1{
+	height: 200px;
+	width: 200px;
+}
+.chartDiv2{
+	height: 200px;
+	width: 200px;
+}
+.MainDiv{
+margin-left:23%;
+margin-top: 7%;
+width:59%;
+}
+h4[name="cal_li"]{
+	padding: 110px 12px 7px 76px;
+    margin-top: 10px;
+    margin-bottom: -140px;
+}
+form{
+	color:white;
+	font-size: 2rem;
+    font-weight: 400;
+}
+button{
+	border-radius: 20px;
+	color: #0f0f0f;
+}
+{%endblock%}
+{%block content%}
+<div class="MainDiv">
+<h3>Welcome User</h3>
+{% if Calorie_intake %}
+<div class="Stats">
+	<ul class="Stats_list">
+		<li><h4>Total Calories Eaten: {{Calories}}<br><br>
+				Total Protein : {{Protein}}<br><br>
+				Total Fats : {{Fats}}<br><br>
+				Total Carbs : {{Carbs}}<br><br>
+				Calories Burned : {{Burnt}} 
+		 </h4></li>
+		
+		<li><h4 name="cal_li">{{Calories}}</h4>
+			<div class="chartDiv2">
+  				<canvas id="myChart2"></canvas>
+			</div>
+			
+		</li>
+		<li>
+			<div class="chartDiv1">
+  				<canvas id="myChart"></canvas>
+			</div>
+		</li>
+
+		
 	</ul>
 	
+</div>
+{%endif%}
+
+
+{% if not Calorie_intake %}
+<div>
+<form action="{{ url_for('gfg')}}" method="post">
+	<label>Enter Your Daily Calorie intake Goal</label>
+	<input type="number" name="calorie_intake" style="border-radius: 20px; color: #0f0f0f;" required >
+	<button type="submit" value="Submit" >Submit</button>
+</form>
+</div>
+{%endif%}
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('myChart');
+  
+  new Chart(ctx, {
+    type : 'doughnut',
+    data: {
+      labels: ['Protein','Carbs','Fat'],
+      datasets: [{
+        label: 'nutrients',
+        data: [{{Protein}},{{Carbs}},{{Fats}}],
+        backgroundColor: [
+                    'rgba(0, 255, 0, 0.72)',
+                    'rgba(255, 0, 0)',
+                    'rgba(0, 120, 192, 0.72)'
+                    ],
+        borderWidth: 1
+      }]
+
+    },
+  });
+</script>
+
+<script>
+  const ctx2 = document.getElementById('myChart2');
+  
+  new Chart(ctx2, {
+    type : 'doughnut',
+    data: {
+      labels: ['Calories Eaten','Remaining'],
+      datasets: [{
+        label: 'nutrients',
+        data: [{{Calories}},{{(Calorie_intake+Burnt)-Calories}}],
+        backgroundColor: [
+                    'rgba(0, 255, 0, 0.72)',
+                    'rgba(51, 51, 51, 1)',
+                    ],
+        borderWidth: 1
+      }]
+    },
+     options:{
+    	plugins:{ 
+    		textInside: {
+                    text: "Geeks",
+                    color: 'green',
+                    fontSize: 15
+                }
+    	}
+    }
+    
+  });
+</script>
+
 </div>
 {% endblock%}
 

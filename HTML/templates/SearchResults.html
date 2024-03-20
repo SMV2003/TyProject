@@ -36,14 +36,15 @@ button{
 
 {% endblock%}
 {%block content%}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div class="FoodResults">
 <table>
 	<tr>
 		<th>Name</th>
-		<th>Calories</th>
-		<th>Protein</th>
-		<th>Fats</th>
-		<th>Carbs</th>
+		<th >Calories</th>
+		<th style="color:rgba(0,255, 0, 0.72);">Protein</th>
+		<th style="color:rgba(255, 0, 0, 1.0);">Fats</th>
+		<th style="color:rgba(0, 120, 192, 0.72);">Carbs</th>
 	</tr>
 	
 	{% for i in range(num) %}
@@ -54,6 +55,42 @@ button{
         <td>{{protein[i]}}</td>
         <td>{{fats[i]}}</td>
         <td>{{carbs[i]}}</td>
+        <td>
+        	<div class="chartDiv{{i}}" style="height: 150px; width: 150px;">
+  				<canvas id="myChart{{i}}" ></canvas>
+			</div>
+
+			
+
+			<script>
+  				const ctx{{i}} = document.getElementById('myChart{{i}}');
+  
+  				new Chart(ctx{{i}}, {
+    			type : 'doughnut',
+    			data: {
+      			labels: ['Protein','Carbs','Fats'],
+      			datasets: [{
+        			label: 'nutrients',
+        			data: [{{protein[i]}},{{carbs[i]}},{{fats[i]}}],
+        			backgroundColor: [
+                    					'rgba(0, 255, 0, 0.72)',
+                    					'rgba(255, 0, 0)',
+                    					'rgba(0, 120, 192, 0.72)'
+                    					],
+        			borderWidth: 1
+      								}]
+    								},
+    								options: {
+  												plugins: {
+    												legend: {
+     												 display: false
+    												}
+  												}
+												}
+    
+  								});
+			</script>
+		</td>
         <td name="" hidden>{{ food_s }}</td>
         
         <td><form  method="post" action="/add_food"  >

@@ -1,8 +1,69 @@
 {% extends "base.html" %}
 {%block title%}Food{% endblock%}
+{% block style%}
+.float-container{
+	color:white;
+	font-size: 17px;
+	height:1000px;
+    padding: 1px;
+	   
+	background-image: linear-gradient(rgb(51, 51, 51,0.99),rgb(51, 51, 51,0.7)), url({{ url_for("static", filename="AboutPC1.jpg") }});
+}
+/*.float-container p{
+	height:155px;
+	width: 500px;
+}
+*/
+
+.float-child {
+    width: 50%;
+    float: left;
+    padding: 20px;
+    /*border: 2px solid red;*/
+}  
+button{
+	background-color: #0066EE;
+    border: 0px;
+    border-radius: 20px;
+    height: 50px;
+    width: 85px;
+    font-size: 2rem;
+    font-weight: 400;
+}
+{%endblock%}
 {%block content%}
-<h1>About</h1>
-<a href="{{ url_for('log_in') }}">
-	<h3>Log In</h3>
-</a>
+<div class="float-container">
+
+	<div class="float-child">
+		<div class="red">
+			<h1>Welcome to YourFitnessFriend!</h1>
+
+			<p>At YourFitnessFriend, we are passionate about helping you maintain a healthy lifestyle by providing valuable information about nutrition and exercise. Whether you're looking to manage your weight, improve your overall health, or simply make more informed choices about your diet and fitness routine, we're here to support you every step of the way.</p>
+
+			<p>Our website offers a comprehensive database of foods along with their corresponding calorie counts, making it easy for you to track your calorie intake and make healthier eating choices. With our user-friendly interface, you can quickly search for your favorite foods or browse through categories to find nutritious options that suit your dietary preferences.</p>
+
+			<p>In addition to our food database, we provide detailed information about various cardio exercises and the number of calories you can burn while performing them. Whether you prefer running, cycling, swimming, or any other form of cardiovascular activity, our website offers valuable insights to help you optimize your workouts and achieve your fitness goals.</p>
+
+			<p>We understand that maintaining a healthy lifestyle is not just about counting calories—it's also about finding balance and enjoying the journey. That's why we strive to empower our users with the knowledge and tools they need to make sustainable changes that enhance their overall well-being.</p>
+
+			<h4>Join our community today and embark on a journey to a healthier, happier you with YourFitnessFriend!</h4>
+			
+			</p>
+		</div>
+	</div>
+
+	<div class="float-child" >
+		<div name="buttons" class="blue" style="margin: 100px;height: 115px; width: 390px; padding: 41px 80px 36px 126px;">
+		<!--<form action="{{ url_for('about')}}" method="post" >-->
+			<button href="url_for('login')" name="login_btn" value="Login">Login</button>
+			<button type="submit" name="signup_btn" value="Sign Up">Sign Up</button>
+			<!--</form>-->
+		</div>
+	</div>
+
+</div>
+<script type="text/javascript">
+	
+</script>
+
 {% endblock%}

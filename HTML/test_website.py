@@ -2,6 +2,7 @@ from flask import Flask, redirect, url_for, render_template, request,session
 from Foods.search_food import search_food,find_nutr_for_search,cross_mul,check_if_in_session
 import requests
 import pdb
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 app.secret_key = "mysecretkey"
@@ -9,12 +10,16 @@ app.secret_key = "mysecretkey"
 
 @app.route('/', methods =["GET", "POST"])
 def gfg():
+	check_if_in_session(session,"caloriereq",0,'h')
+	if request.method == "POST":
+		cal_intake = int(request.form.get("calorie_intake"))
+		session["caloriereq"] = cal_intake
 	check_if_in_session(session,"calories_burned",0,'h')
 	check_if_in_session(session,"calories",0,'h')
 	check_if_in_session(session,"protein",0,'h')
 	check_if_in_session(session,"fats",0,'h')
 	check_if_in_session(session,"carbs",0,'h')
-	return render_template("HomePage.html",Calories=session["calories"],Protein=session["protein"],Fats=session["fats"],Carbs=session["carbs"],Burnt=session["calories_burned"])
+	return render_template("HomePage.html",Calorie_intake=session["caloriereq"],Calories=int(session["calories"]),Protein=session["protein"],Fats=session["fats"],Carbs=session["carbs"],Burnt=session["calories_burned"])
 
 
 
@@ -89,8 +94,10 @@ def get_calories_burned(activity, weight=160, duration=60, api_key='6RQaVycULw0B
     else:
         return None
 
-@app.route('/about.html')
+@app.route('/about.html',methods =["GET", "POST"])
 def about():
+	#if request.method == "POST":
+	#	meal1 = request.form.get("diary_meal_1")
 	return render_template("about.html")
 
 @app.route('/food.html/diary.html',methods =["GET", "POST"])
@@ -162,6 +169,10 @@ def add_exercise():
 @app.route('/log_in.html')
 def log_in():
 	return render_template("login.html")
+
+@app.route('/sign_up.html')
+def sign_up():
+	return render_template("signup.html")
 
 
 if __name__ == "__main__":

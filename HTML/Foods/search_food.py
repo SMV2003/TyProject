@@ -127,6 +127,25 @@ def find_calories_for_search(results):
     return calories
 
 def search_food(foodname):
+    """
+    Searches for nutritional information of a given food using the USDA API with noms.
+
+    Parameters:
+    - foodname (str): The name of the food to search for.
+
+    Returns:
+    - list: A list containing the following elements:
+        - calories (list): List of calorie values for each food item found.
+        - protein (list): List of protein values for each food item found.
+        - fats (list): List of fat values for each food item found.
+        - carbs (list): List of carbohydrate values for each food item found.
+        - description_of_foods (list): List of descriptions for each food item found.
+
+    Note:
+    - This function utilizes the noms to search for food items in USDA API and retrieve their nutritional information.
+    - The 'client' object used to make API requests should be instantiated beforehand.
+    - The 'find_nutr_for_search' function is expected to be defined elsewhere and should return lists of nutritional values.
+    """
     results = client.search_query(foodname)
     description_of_foods = [i['description'] for i in results.json['items']]
     #fdcid_of_foods = [i['fdcId'] for i in results.json['items']]   
@@ -142,6 +161,31 @@ def cross_mul(for_100,req_wt):
     return round(req_nutr,2)
 
 def find_nutr_for_search(results):
+    """
+    Extracts nutritional information from the search results obtained from the noms.
+
+    Parameters:
+    - results (object): The search results obtained from the Nutritionix API.
+
+    Returns:
+    - tuple: A tuple containing the following lists:
+        - calories (list): List of calorie values for each food item found.
+        - protein (list): List of protein values for each food item found.
+        - fats (list): List of fat values for each food item found.
+        - carbs (list): List of carbohydrate values for each food item found.
+
+    Note:
+    - This function iterates through the search results obtained and extracts nutritional information
+      such as calories, protein, fats, and carbohydrates for each food item.
+    - The 'results' parameter is expected to contain the JSON response obtained from the Nutritionix API search query.
+    - Each food item in the search results may have multiple nutritional values, which are extracted based on the 'nutrientId' 
+      provided in the JSON response.
+    - Nutrient IDs used:
+        - 1003: Protein
+        - 1004: Fats
+        - 1005: Carbohydrates
+        - 1008: Calories
+    """
     calories = []
     carbs = []
     fats = []
@@ -162,7 +206,31 @@ def find_nutr_for_search(results):
     return calories,protein,fats,carbs
 
 def check_if_in_session(session,string_to_check,value,page):
-    
+    """
+    Checks if a specific string exists in the session dictionary. If not, it adds it with a default value or a specified value.
+    If the string already exists, it updates its value by adding the provided value.
+
+    Parameters:
+    - session (dict): The session dictionary where the string and its value will be stored or updated.
+    - string_to_check (str): The string to check for in the session dictionary.
+    - value (float): The value to add to or update the string's value in the session dictionary.
+    - page (str): A flag indicating the type of page ('h' for home page, any other value for other pages).
+
+    Returns:
+    - None: The function directly updates the session dictionary.
+
+    Note:
+    - This function is useful for maintaining session data in web applications.
+    - It checks if a specific string exists in the session dictionary. If not, it adds the string with a default value
+      (0.0) for the home page or with the specified value for other pages.
+    - If the string already exists in the session dictionary, it updates its value by adding the provided value.
+    - The 'session' parameter is expected to be a dictionary where session data is stored.
+    - The 'string_to_check' parameter is the key to check in the session dictionary.
+    - The 'value' parameter is the value to add to or update the string's value in the session dictionary.
+    - The 'page' parameter is a flag indicating the type of page. If 'h', it represents the home page; otherwise, it 
+      indicates other pages.
+    """
+
     if string_to_check not in session:
         if page == 'h':
             session[string_to_check] = 0.0
