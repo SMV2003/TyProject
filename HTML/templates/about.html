@@ -30,6 +30,9 @@ button{
     font-size: 2rem;
     font-weight: 400;
 }
+a{
+	color:white;
+}
 {%endblock%}
 {%block content%}
 <div class="float-container">
@@ -55,15 +58,17 @@ button{
 	<div class="float-child" >
 		<div name="buttons" class="blue" style="margin: 100px;height: 115px; width: 390px; padding: 41px 80px 36px 126px;">
 		<!--<form action="{{ url_for('about')}}" method="post" >-->
-			<button href="url_for('login')" name="login_btn" value="Login">Login</button>
-			<button type="submit" name="signup_btn" value="Sign Up">Sign Up</button>
+			<a href="{{ url_for('log_in') }}"><button onclick="login()" name="login_btn" value="Login">Login</button></a>
+			<a href="{{ url_for('sign_up') }}"><button name="signup_btn" value="Sign Up">Sign Up</button></a>
 			<!--</form>-->
 		</div>
 	</div>
 
 </div>
 <script type="text/javascript">
-	
+	function login() {
+  
+}
 </script>
 
 {% endblock%}
