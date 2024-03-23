@@ -1,5 +1,5 @@
 import noms
-key = open("D:\\E Drive\\Local Disk\\USDA_API_key.txt" , mode='r').read()
+key = open("C:\\Users\\kaushal\\Desktop\\foodapi.txt" , mode='r').read()
 client = noms.Client(key)
 
 def get_foundation_only(query):

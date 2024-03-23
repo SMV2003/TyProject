@@ -9,21 +9,52 @@ from datetime import datetime
 app = Flask(__name__)
 
 app.secret_key = "mysecretkey"
-ekey = open("D:\\E Drive\\Local Disk\\ExerciseAPI.txt" , mode='r').read()
-#Add DB
-app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///users.db'
-#Initialize the DB
-db = SQLAlchemy(app)
+ekey = open("C:\\Users\\kaushal\\Desktop\\ExerciseApi.txt" , mode='r').read()
 
-#Create Model
-class Users(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	name= db.Column(db.String(200), nullable=False)
-	email = db.Column(db.String(200), nullable=False, unique=True)
-	date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
-	def __repr__(self):
-		return '<Name %r>' % self.name
+# Database Stuff
+
+app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql://postgres:@localhost:5433/kaushal'
+
+db=SQLAlchemy(app)
+
+class User(db.Model):
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, unique=True, nullable=False)
+    password = db.Column(db.String, nullable=False)
+    calorie_goal = db.Column(db.Float)
+    nutritions = db.relationship('Nutrition', backref='user', lazy=True)
+
+    def __init__(self, username, password, calorie_goal):
+        self.username = username
+        self.password = password
+        self.calorie_goal = calorie_goal
+
+
+class Nutrition(db.Model):
+    __tablename__ = 'nutritions'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    calories_eaten = db.Column(db.Float)
+    protein = db.Column(db.Float)
+    fats = db.Column(db.Float)
+    carbs = db.Column(db.Float)
+    calories_burned = db.Column(db.Float)
+
+    def __init__(self, user_id, calories_eaten, protein, fats, carbs, calories_burned):
+        self.user_id = user_id
+        self.calories_eaten = calories_eaten
+        self.protein = protein
+        self.fats = fats
+        self.carbs = carbs
+        self.calories_burned = calories_burned
+
+with app.app_context():
+	db.create_all()
+
 
 @app.route('/', methods =["GET", "POST"])
 def gfg():
@@ -174,32 +205,103 @@ def add_food():
 		
 	return redirect(url_for("food"))
 
-@app.route('/add_exercise',methods=["GET", "POST"])
+# @app.route('/add_exercise',methods=["GET", "POST"])
+# def add_exercise():
+# 	if request.method == "POST":
+# 		cal_burned = 0.0
+# 		cal_burned = float(request.form.get("cals_burned"))
+# 		check_if_in_session(session,"calories_burned",cal_burned,'O')
+# 	return redirect(url_for("exercise"))		
+
+
+# @app.route('/log_in.html',methods=["GET", "POST"])
+# def log_in():
+# 	return render_template("login.html")
+
+# @app.route('/sign_up.html',methods=["GET", "POST"])
+# def sign_up():
+# 	if request.method == "POST":
+# 		user = Users.query.filter_by(email=request.form.get("email_id")).first()
+# 		if user is None:
+# 			name = request.form.get("name")
+# 			email = request.form.get("email_id")
+# 			user = Users(name=name,email=email)
+# 			db.session.add(user)
+# 			db.session.commit()
+# 	our_users = Users.query.order_by(Users.date_added)
+# 	return render_template("signup.html",our_users=our_users)
+
+@app.route('/add_exercise', methods=["GET", "POST"])
 def add_exercise():
-	if request.method == "POST":
-		cal_burned = 0.0
-		cal_burned = float(request.form.get("cals_burned"))
-		check_if_in_session(session,"calories_burned",cal_burned,'O')
-	return redirect(url_for("exercise"))		
+    if request.method == "POST":
+        cal_burned = float(request.form.get("cals_burned"))
+        
+        default_calories_eaten = 0.0
+        default_protein = 0.0
+        default_fats = 0.0
+        default_carbs = 0.0
+        
+        # Create a new Nutrition object with the provided calories burned data
+        nutrition_entry = Nutrition(
+            user_id=session['user_id'],  # Assuming you have stored user_id in the session
+            calories_burned=cal_burned,
+            calories_eaten=default_calories_eaten,
+            protein=default_protein,
+            fats=default_fats,
+            carbs=default_carbs
+        )
+        # Add the new Nutrition object to the session and commit to save it to the database
+        db.session.add(nutrition_entry)
+        db.session.commit()
+        
+        # Redirect to the exercise page
+        return redirect(url_for("exercise"))
+
+    return render_template('add_exercise.html')	
 
 
-@app.route('/log_in.html',methods=["GET", "POST"])
+@app.route('/log_in.html' , methods=["POST","GET"])
 def log_in():
-	return render_template("login.html")
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
 
-@app.route('/sign_up.html',methods=["GET", "POST"])
+        if user:
+            if user.password == password:
+                # Store the username in the session
+                session['username'] = username
+                session['user_id']=user.id
+                
+                return redirect('/profile.html')  # Redirect to profile page after successful login
+            else:
+                return "Incorrect password"  # Password does not match
+        else:
+            return "User not found"  # User with the provided username does not exist
+
+    return render_template('login.html')
+
+@app.route('/profile.html')
+def profile():
+	return render_template('profile.html')
+
+@app.route('/signup.html',methods=["POST","GET"])
 def sign_up():
-	if request.method == "POST":
-		user = Users.query.filter_by(email=request.form.get("email_id")).first()
-		if user is None:
-			name = request.form.get("name")
-			email = request.form.get("email_id")
-			user = Users(name=name,email=email)
-			db.session.add(user)
-			db.session.commit()
-	our_users = Users.query.order_by(Users.date_added)
-	return render_template("signup.html",our_users=our_users)
 
+	if request.method == "POST":
+		user_name=request.form['username']
+		password=request.form['password']
+		new_user =User(username=user_name,password=password,calorie_goal=0)
+		
+		try:
+			db.session.add(new_user)
+			db.session.commit()
+			return redirect("/log_in.html")
+		except:
+			return "There was an error signing up"
+	else:
+		return render_template("signup.html")
+	
 
 if __name__ == "__main__":
 	app.run(debug = True)
