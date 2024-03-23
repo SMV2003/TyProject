@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{%block title%}Home Page{% endblock%}
+{%block content%}
+<h3>Welcome User</h3>
+
+<div  style="color: whitesmoke;">
+	<ul style="background-color: #0f0f0f;"><li><h4>Total Calories : </h4></li>
+		<li><h3> {{Calories}}</h3></li>
+	</ul>
+	<ul style="background-color: #0f0f0f;"><li><h4>Total Protein : </h4></li>
+		<li><h3> {{Protein}}</h3></li>
+	</ul>
+	<ul style="background-color: #0f0f0f;"><li><h4>Total Fats : </h4></li>
+		<li><h3> {{Fats}}</h3></li>
+	</ul>
+	<ul style="background-color: #0f0f0f;"><li><h4>Total Carbs : </h4></li>
+		<li><h3> {{Carbs}}</h3></li>
+	</ul>
+	<ul style="background-color: #0f0f0f;"><li><h4>Calories Burned : </h4></li>
+		<li><h3> {{Burnt}}</h3></li>
+	</ul>
+	
+</div>
+{% endblock%}
+
+

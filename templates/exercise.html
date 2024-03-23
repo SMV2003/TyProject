@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{%block title%}Exercise{% endblock%}
+{% block style%}
+ h1 , h2,p,label{
+        color: rgb(255, 255, 255);
+    }
+    .cal {
+        margin: 3.5%;
+    }
+
+table, th, td
+        {
+            <!--border: 1px solid black;-->
+            border-collapse: collapse;
+            padding: 20px;
+            color: white;
+            display: table-cell;
+            font-size: 16px;
+        
+      
+        }
+th{
+    text-align: left;
+    font-size: 26px;
+}
+button{
+        border: none;
+        cursor: pointer;
+        appearance: none;
+        background-color: inherit;
+         transition: transform .7s ease-in-out;
+        margin-left:10px;
+
+
+      }
+form{
+    text-align: left;
+    padding: 20px 20px 20px 29px;
+}
+label{
+    padding: 15px 0px 12px 12px;
+    font-size: 19px;
+}
+.Search_for_exercise input{
+    border-radius: 60px;
+    padding: 10px;
+
+}
+{% if result %}
+.MainDivExercise{
+    background-image: linear-gradient(rgb(51, 51, 51,0.999),rgb(51, 51, 51,0.9)), url({{ url_for("static", filename="DeadliftBGman.jpg") }});
+}
+{% else %}
+.MainDivExercise{
+    background-image: linear-gradient(rgb(51, 51, 51,0.999),rgb(51, 51, 51,0.9)), url({{ url_for("static", filename="DeadliftBGman.jpg") }});
+height:491px;
+}
+{% endif %}
+
+
+{% endblock%}
+{%block content%}
+<div class="MainDivExercise">
+<div>
+    <form class="Search_for_exercise" action="{{ url_for('exercise')}}" method="POST">
+        <label for="activity">Activity:</label>
+        <input type="text" id="activity" name="activity" placeholder="Enter Name of Activity" required>
+        <label for="weight"> Weight(kg):</label>
+        <input type="number" id="weight" name="weight" placeholder="Enter Your Weight" required>
+        <label for="duration">Duration (minutes):</label>
+        <input type="number" id="duration" name="duration" placeholder="Enter Duration of Activity" required>
+        <button type="submit"><img src="{{url_for('static',filename='CalculateExercise.png')}}"></button>
+    </form>
+</div>
+    {% if result %}
+    <table>
+    <tr>
+        <th>Activity</th>
+        <th>Cals Burned/hr</th>
+        <th>Duration(mins)</th>
+        <th>Calories Burned</th>
+    </tr>
+    
+        {% for item in result %}
+        <tr>
+            <td>{{item.name}}</td>
+            <td>{{item.calories_per_hour}}</td>
+            <td>{{ item.duration_minutes }}</td>
+            <td>{{ item.total_calories }}</td>
+            <td>
+                <form  method="post" action="/add_exercise"  >
+                    <input type="hidden" name="cals_burned" value="{{ item.total_calories }}">
+
+                    <button type="submit"  value="Add"  style="color: black;">
+                        <img src="{{url_for('static',filename='AddButton.png')}}">
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </table>
+        
+    {% endif %}
+</div>
+
+
+{% endblock%}
