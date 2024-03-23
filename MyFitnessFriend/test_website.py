@@ -9,7 +9,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 app.secret_key = "mysecretkey"
-
+ekey = open("D:\\E Drive\\Local Disk\\ExerciseAPI.txt" , mode='r').read()
 #Add DB
 app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///users.db'
 #Initialize the DB
@@ -86,7 +86,7 @@ def exercise():
 			return "Failed to retrieve data. Check your API key or parameters."
 	return render_template('exercise.html',result=False)
 
-def get_calories_burned(activity, weight=160, duration=60, api_key='6RQaVycULw0Bmr81aLkfsQ==oJUeFIWk901rnJVk'):
+def get_calories_burned(activity, weight=160, duration=60, api_key=ekey):
     """
     Get calories burned for a specific activity.
 
