@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{%block title%}Sign Up{% endblock%}
+{% block style%}
+form{
+	margin-top: 70px;
+	margin-left:400px;
+	
+}
+
+div[name="UsersInDB"]
+{
+	margin:20px;
+}
+.name_box input{
+	border-radius: 20px;
+}
+.email_box input{
+	border-radius: 20px;
+}
+{%endblock%}
+{% block content%}
+<form action="{{ url_for('sign_up')}}" method="post">
+		<div style="color: white;">
+			<h1>Sign Up for YourFitnessFriend</h1> 
+		</div>
+		<div class="name_box">
+			<input type="text" name="name" placeholder="Enter name">
+		</div>
+		<div class="email_box">
+			<input type="email" name="email_id" placeholder="Enter email">
+		</div>
+		<!--<div>
+			<input type="password" name="password" placeholder="Enter password">
+		</div>
+	-->
+		<button type="submit" value="Submit" >Submit</button>
+</form>
+<div name="UsersInDB">
+{%for our_user in our_users%}
+{{our_user.id}}  {{our_user.name}} - {{our_user.email}}
+{%endfor%}
+</div>
+{% endblock%}

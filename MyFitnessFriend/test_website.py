@@ -2,11 +2,28 @@ from flask import Flask, redirect, url_for, render_template, request,session
 from Foods.search_food import search_food,find_nutr_for_search,cross_mul,check_if_in_session
 import requests
 import pdb
-import matplotlib.pyplot as plt
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
 
 app = Flask(__name__)
+
 app.secret_key = "mysecretkey"
-#session["calories"] = 0
+
+#Add DB
+app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///users.db'
+#Initialize the DB
+db = SQLAlchemy(app)
+
+#Create Model
+class Users(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name= db.Column(db.String(200), nullable=False)
+	email = db.Column(db.String(200), nullable=False, unique=True)
+	date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
+	def __repr__(self):
+		return '<Name %r>' % self.name
 
 @app.route('/', methods =["GET", "POST"])
 def gfg():
@@ -166,13 +183,22 @@ def add_exercise():
 	return redirect(url_for("exercise"))		
 
 
-@app.route('/log_in.html')
+@app.route('/log_in.html',methods=["GET", "POST"])
 def log_in():
 	return render_template("login.html")
 
-@app.route('/sign_up.html')
+@app.route('/sign_up.html',methods=["GET", "POST"])
 def sign_up():
-	return render_template("signup.html")
+	if request.method == "POST":
+		user = Users.query.filter_by(email=request.form.get("email_id")).first()
+		if user is None:
+			name = request.form.get("name")
+			email = request.form.get("email_id")
+			user = Users(name=name,email=email)
+			db.session.add(user)
+			db.session.commit()
+	our_users = Users.query.order_by(Users.date_added)
+	return render_template("signup.html",our_users=our_users)
 
 
 if __name__ == "__main__":
