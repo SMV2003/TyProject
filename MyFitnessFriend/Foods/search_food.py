@@ -1,5 +1,5 @@
 import noms
-key = open("C:\\Users\\kaushal\\Desktop\\foodapi.txt" , mode='r').read()
+key = open("D:\\E Drive\\Local Disk\\USDA_API_key.txt" , mode='r').read()
 client = noms.Client(key)
 
 def get_foundation_only(query):
@@ -147,6 +147,8 @@ def search_food(foodname):
     - The 'find_nutr_for_search' function is expected to be defined elsewhere and should return lists of nutritional values.
     """
     results = client.search_query(foodname)
+    if results.json == None:
+        return 0
     description_of_foods = [i['description'] for i in results.json['items']]
     #fdcid_of_foods = [i['fdcId'] for i in results.json['items']]   
     calories,protein,fats,carbs = find_nutr_for_search(results)

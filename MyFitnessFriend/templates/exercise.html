@@ -72,6 +72,11 @@ height:491px;
         <button type="submit"><img src="{{url_for('static',filename='CalculateExercise.png')}}"></button>
     </form>
 </div>
+
+{% if flag == 0%}
+<h4 style="color:whitesmoke;/* border-left:500px; */padding: 20px 1px 1px 184px;">Entered Activity is Not Available, Please Try Another
+</h4>
+{% endif %}
     {% if result %}
     <table>
     <tr>

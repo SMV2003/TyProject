@@ -9,12 +9,12 @@ from datetime import datetime
 app = Flask(__name__)
 
 app.secret_key = "mysecretkey"
-ekey = open("C:\\Users\\kaushal\\Desktop\\ExerciseApi.txt" , mode='r').read()
+ekey = open("D:\\E Drive\\Local Disk\\ExerciseAPI.txt" , mode='r').read()
 
 
 # Database Stuff
 
-app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql://postgres:@localhost:5433/kaushal'
+app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql://postgres:smvpg@localhost:5433/shantanu'
 
 db=SQLAlchemy(app)
 
@@ -67,7 +67,7 @@ def gfg():
 	check_if_in_session(session,"protein",0,'h')
 	check_if_in_session(session,"fats",0,'h')
 	check_if_in_session(session,"carbs",0,'h')
-	return render_template("HomePage.html",Calorie_intake=session["caloriereq"],Calories=int(session["calories"]),Protein=session["protein"],Fats=session["fats"],Carbs=session["carbs"],Burnt=session["calories_burned"])
+	return render_template("HomePage.html",Calorie_intake=session["caloriereq"],Calories=int(session["calories"]),Protein=session["protein"],Fats=session["fats"],Carbs=session["carbs"],Burnt=session["calories_burned"],username=session["username"])
 
 
 
@@ -79,6 +79,8 @@ def food():
 		
 
 		foods_list=search_food(foodname)
+		if foods_list == 0:
+			return render_template("food.html",flag=0)
 		foods_list[0] = map(lambda x: cross_mul(x,size),foods_list[0])
 		foods_list[1] = map(lambda x: cross_mul(x,size),foods_list[1])
 		foods_list[2] = map(lambda x: cross_mul(x,size),foods_list[2])
@@ -89,7 +91,7 @@ def food():
 		foods_list[2] = list(foods_list[2])
 		foods_list[3] = list(foods_list[3])
 		return render_template("SearchResults.html",food_s=size,name=foods_list[4],calories=foods_list[0],protein=foods_list[1],fats=foods_list[2],carbs=foods_list[3],num=len(foods_list[1]))
-	return render_template("food.html")
+	return render_template("food.html",flag=1)
 
 
 
@@ -112,10 +114,10 @@ def exercise():
 			return "Weight and duration must be integers."
 		calories_burned_data = get_calories_burned(activity, weight, duration)
 		if calories_burned_data:
-			return render_template('exercise.html', result=calories_burned_data)
+			return render_template('exercise.html', result=calories_burned_data,flag=1)
 		else:
-			return "Failed to retrieve data. Check your API key or parameters."
-	return render_template('exercise.html',result=False)
+			return render_template('exercise.html',result=False,flag=0)
+	return render_template('exercise.html',result=False,flag=1)
 
 def get_calories_burned(activity, weight=160, duration=60, api_key=ekey):
     """
