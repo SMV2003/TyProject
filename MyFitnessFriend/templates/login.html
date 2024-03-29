@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {%block title%}Log In{% endblock%}
-{% block style%}{% endblock%}
+{% block style%}
+h4{
+	color:whitesmoke;
+	padding: 20px 1px 1px 184px;
+}
+{% endblock%}
 {%block content%}
 <h1>Login</h1>
 <div id="container">
@@ -17,4 +22,10 @@
 		<input type="submit" value="Log In">
 	</form>
 </div>
+{%if flag==1%}
+<h4>Incorrect Password</h4>
+{%endif%}
+{%if flag==2%}
+<h4>User Not Found</h4>
+{%endif%}
 {% endblock%}

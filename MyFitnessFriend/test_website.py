@@ -67,12 +67,16 @@ def gfg():
 	check_if_in_session(session,"protein",0,'h')
 	check_if_in_session(session,"fats",0,'h')
 	check_if_in_session(session,"carbs",0,'h')
+	if "username" not in session:
+		return render_template('about.html')
 	return render_template("HomePage.html",Calorie_intake=session["caloriereq"],Calories=int(session["calories"]),Protein=session["protein"],Fats=session["fats"],Carbs=session["carbs"],Burnt=session["calories_burned"],username=session["username"])
 
 
 
 @app.route('/food.html',methods =["GET", "POST"])
 def food():
+	if "username" not in session:
+		return render_template('about.html')
 	if request.method == "POST":
 		foodname = request.form.get("fname")
 		size = int(request.form.get("serving_size"))
@@ -102,6 +106,8 @@ def home():
 
 @app.route('/exercise.html',methods =["GET", "POST"])
 def exercise():
+	if "username" not in session:
+		return render_template('about.html')
 	if request.method == 'POST':
 		activity = request.form.get('activity')
 		weight = request.form.get('weight')
@@ -150,45 +156,7 @@ def about():
 	#	meal1 = request.form.get("diary_meal_1")
 	return render_template("about.html")
 
-@app.route('/food.html/diary.html',methods =["GET", "POST"])
-def diary():
-	protein = carbs = fat = calories = 0.0
-	if request.method == "POST":
-		
-		meal1 = request.form.get("diary_meal_1")
-		msize1 = request.form.get("meal_size1")
-		
-		meal2 = request.form.get("diary_meal_2")
-		msize2 = request.form.get("meal_size2")
-		
-		diary_flist = request.form.getlist("diary_meal_addn")
-		diary_flist.append(meal1)
-		diary_flist.append(meal2)
-		#diary_flist = [i.replace(" ","_") for i in diary_flist ]
-		
-		meal_slist = request.form.getlist("meal_size_list")
-		meal_slist.append(msize1)
-		meal_slist.append(msize2)
-		meal_slist = [int(i) for i in meal_slist ]
 
-		#food_dict = {diary_flist[i]: meal_slist[i] for i in range(len(diary_flist))}
-		#food_dict = {meal1:msize1,meal2:msize2}
-		#pdb.set_trace()
-
-		nutr_dict = find_nutr_multiple_v2(food_dict)
-		for value in nutr_dict.values():
-			protein+=value[0]
-			carbs+=value[1]
-			fat+=value[2]
-			calories+=value[3]
-
-		check_if_in_session(session,"calories",calories,'O')
-		check_if_in_session(session,"protein",protein,'O')
-		check_if_in_session(session,"fats",fats,'O')
-		check_if_in_session(session,"carbs",carbs,'O')
-
-
-	return render_template("diary.html",Calories=calories)
 
 @app.route('/add_food',methods=["GET", "POST"])
 def add_food():
@@ -275,13 +243,13 @@ def log_in():
                 session['username'] = username
                 session['user_id']=user.id
                 
-                return redirect('/profile.html')  # Redirect to profile page after successful login
+                return redirect('/home.html')  # Redirect to profile page after successful login
             else:
-                return "Incorrect password"  # Password does not match
+                return render_template('login.html',flag=1) # Password does not match
         else:
-            return "User not found"  # User with the provided username does not exist
+            return render_template('login.html',flag=2)  # User with the provided username does not exist
 
-    return render_template('login.html')
+    return render_template('login.html',flag=0)
 
 @app.route('/profile.html')
 def profile():

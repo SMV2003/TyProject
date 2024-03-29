@@ -50,15 +50,24 @@ button{
   .MainDivFood{
   	padding:1px;
 background-image: linear-gradient(rgb(51, 51, 51,0.9),rgb(51, 51, 51,0.9)), url({{ url_for("static", filename="Food2v2.jpg") }});
-background-size: 1363px 737px;
-height:461px;
 
-background-repeat: no-repeat;
+
+height: 100%; 
+background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+
 }
 
 body{
 	background-color: #333;
+      height: 100%;
 }
+html {
+  height: 100%;
+}
+
   
 
 {%endblock%}
