@@ -56,6 +56,12 @@ background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
+{% if not result %}
+html,body {
+  height: 100%;
+}
+{% endif %}
+
 {% endblock%}
 {%block content%}
 <div class="MainDivExercise">

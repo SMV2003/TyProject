@@ -2,8 +2,10 @@
 {%block title%}Sign Up{% endblock%}
 {% block style%}
 form{
-	margin-top: 70px;
-	margin-left:400px;
+	padding: 45px;
+    color: white;
+    margin: auto;
+    margin-top: 40px;
 	
 }
 
@@ -11,30 +13,43 @@ div[name="UsersInDB"]
 {
 	margin:20px;
 }
-.name_box input{
-	border-radius: 20px;
+.MainDivSU{
+		border:50px;
+      	align-items: center;
 }
-.email_box input{
-	border-radius: 20px;
+input {
+    
+    border-radius: 50px;
+    padding: 5px;
+    margin: 5px;
+    color: black;
+}
+button{
+	
+	border-radius: 50px;
+    padding: 5px;
+    margin: 5px;
+    color: black;
 }
 {%endblock%}
 {% block content%}
+<div class="MainDivSU">
 <form action="{{ url_for('sign_up')}}" method="post">
 		<div style="color: white;">
 			<h1>Sign Up for YourFitnessFriend</h1> 
 		</div>
 		<div class="name_box">
+			<label>Username</label>
 			<input type="text" name="username" placeholder="Enter username">
 		</div>
-		<!-- <div class="email_box">
-			<input type="email" name="email_id" placeholder="Enter email">
-		</div> -->
 		<div>
+			<label>Password</label>
 			<input type="password" name="password" placeholder="Enter password">
 		</div>
 	
 		<button type="submit" value="Submit" >Submit</button>
 </form>
+</div>
 <div name="UsersInDB">
 {%for our_user in our_users%}
 {{our_user.id}}  {{our_user.name}} - {{our_user.email}}

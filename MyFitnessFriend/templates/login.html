@@ -5,22 +5,45 @@ h4{
 	color:whitesmoke;
 	padding: 20px 1px 1px 184px;
 }
+.MainDivLogin{
+		border:50px;
+      	align-items: center;
+}
+input {
+    
+    border-radius: 50px;
+    padding: 5px;
+    margin: 5px;
+    color: black;
+}
+
 {% endblock%}
 {%block content%}
-<h1>Login</h1>
-<div id="container">
-	<form  action="{{ url_for('log_in')}}" method="post">
-		<div>
+<div class="MainDivLogin">
+		<form action="/log_in.html" method="post" style="
+    padding: 45px;
+    color: white;
+    margin: auto;
+    margin-top: 40px;
+">
+		
 			<h1>Log in to YourFitnessFriend</h1> 
-		</div>
-		<div>
-			<input type="text" name="username" placeholder="Enter username">
-		</div>
-		<div>
-			<input type="password" name="password" placeholder="Enter password">
-		</div>
+		
+		
+			<label>Username</label>
+<input type="text" name="username" placeholder="Enter username">
+<br>
+	
+		
+			<label>Password</label>
+<input type="password" name="password" placeholder="Enter password">
+<br>
+		
 		<input type="submit" value="Log In">
+		<h4>Don't Have an Account? <a href="{{url_for('sign_up')}}">Sign Up</a></h4>
 	</form>
+
+
 </div>
 {%if flag==1%}
 <h4>Incorrect Password</h4>
