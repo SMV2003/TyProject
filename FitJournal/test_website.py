@@ -220,36 +220,7 @@ def log_in():
             return render_template('login.html', flag=2)  # User with the provided username does not exist
 
     return render_template('login.html', flag=0)
-# @app.route('/log_in.html' , methods=["POST","GET"])
-# def log_in():
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         password = request.form['password']
-#         user = User.query.filter_by(username=username).first()
-#         nutridata=Nutrition.query.filter_by(user_id=user.id).order_by(Nutrition.datentime.desc()).first()
-#         if user :
-#             if user.password == password:
-#                 # Store the username in the session
-#                 session['username'] = username
-#                 session['user_id']=user.id
-#                 if nutridata is not None:
-#                     session['cal_burned']=nutridata.calories_burned
-#                     session['calories']=nutridata.calories_eaten
-#                     session['protein']=nutridata.protein
-#                     session['fats']=nutridata.fats
-#                     session['carbs']=nutridata.carbs
-#                     session['caloriereq']=nutridata.calorie_goal
-#                     datentime=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-#                     session['datentime']=datentime
-#                     return redirect('/home.html')  # Redirect to profile page after successful login
-#                 else:
-#                      return redirect('/home.html')
-#             else:
-#                 return render_template('login.html',flag=1) # Password does not match
-#         else:
-#             return render_template('login.html',flag=2)  # User with the provided username does not exist
 
-#     return render_template('login.html',flag=0)
 
 @app.route('/logout')
 def log_out():
@@ -290,8 +261,23 @@ def sign_up():
 	else:
 		return render_template("signup.html")
 
+
 @app.route('/forgot_password.html', methods=["POST", "GET"])
 def forgot_password():
+	if request.method == "POST":
+		username=request.form['username']
+		newpass=request.form['password']
+		
+		finduser=User.query.filter_by(username=username).first()
+		if finduser:
+				print(finduser)
+				finduser.password=newpass
+				try:
+					db.session.commit()
+					return redirect("/log_in.html")
+				except:
+					return "There was a problem in resetting password"
+			
 	return render_template("forgot_pass.html")	
 
 if __name__ == "__main__":
