@@ -9,13 +9,11 @@ from datetime import datetime
 app = Flask(__name__)
 
 app.secret_key = "mysecretkey"
-ekey = open("C:\\Users\\kaushal\\Desktop\\ExerciseApi.txt" , mode='r').read()
-
+ekey = open("D:\\E Drive\\Local Disk\\ExerciseAPI.txt" , mode='r').read()
 
 # Database Stuff
 
-app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql://postgres:@localhost:5433/kaushal01'
-
+app.config['SQLALCHEMY_DATABASE_URI'] ='postgresql://postgres:smvpg@localhost:5433/shantanu01'
 db=SQLAlchemy(app)
 
 class User(db.Model):

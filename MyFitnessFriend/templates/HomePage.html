@@ -23,6 +23,10 @@
 	height: 200px;
 	width: 200px;
 }
+.chartDiv3{
+	height: 250px;
+	width: 500px;
+}
 .MainDiv{
 
 background-image: linear-gradient(rgb(51, 51, 51, 0.9), rgb(51, 51, 51, 0.9)), url({{ url_for("static", filename="HomePg1.jpg") }});
@@ -82,10 +86,14 @@ body,html{
   				<canvas id="myChart"></canvas>
 			</div>
 		</li>
-
+		<li>
+			
+		</li>
 		
 	</ul>
-	
+	<div class="chartDiv3">
+  				<canvas id="myChart3"></canvas>
+			</div>
 </div>
 {%endif%}
 
@@ -155,7 +163,49 @@ body,html{
   });
 </script>
 
-
+<script>
+  const ctx3 = document.getElementById('myChart3');
+  
+  new Chart(ctx3, {
+    type: 'bar',
+    data: {
+      labels: ['1','2'],
+      datasets: [{
+        label: 'Calories Eaten',
+        data: [{{Calories}},2100],
+        backgroundColor:[
+        		'rgba(0, 255, 0, 0.72)',
+        	],
+        barThickness: 60,
+        
+        borderWidth: 1
+      },
+      
+      {
+        label: 'Remaining',
+        data: [{{(Calorie_intake+Burnt)-Calories}},2800],
+        backgroundColor:[
+        		'rgba(51, 51, 51, 1)'
+        	],
+        barThickness: 60,
+        borderWidth: 1
+      }
+      ]
+    }
+    
+    ,
+    options: {
+      scales: {
+      	x:{
+      		stacked:true
+      	},
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
 
 </div>
 {% endblock%}
