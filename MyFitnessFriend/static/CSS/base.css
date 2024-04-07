@@ -70,5 +70,25 @@
 
       
 			}
+li[name="logOutli"]{
+		float: right;
+		border:0px; 
+		padding:5px;
+		background-color: #0066EE; 
+	}
 
+a[name="logOuta"]{
+	padding: unset;
+	border-radius: 20px;
+	background-color: #0066EE; 
+	color: #0066EE; 
+}
+button[name="logOutbtn"]{
+	border:0px; 
+	padding:5px;
+	border-radius: 20px;
+    color: #0f0f0f;
+    background-color: white;
+
+}
 

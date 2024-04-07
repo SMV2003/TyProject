@@ -20,7 +20,7 @@ button{
 
 
       }
-      button:hover {
+      button[name="searchfd"]:hover {
   transform: rotate(360deg);
 }
 
@@ -81,7 +81,7 @@ html {
 	<input type="text" id="foodname" name="fname" placeholder="Enter Food Name" required>
 	<label for="quantity">Serving Size in grams</label>
   	<input type="number" id="quantity" name="serving_size" min="1" max="2000" required>
-  	<button type="submit" value="Search">
+  	<button name="searchfd" type="submit" value="Search">
   		<img src="{{url_for('static',filename='FoodSearch2.png')}}">
   	</button>
 	</form>

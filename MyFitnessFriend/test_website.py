@@ -289,7 +289,10 @@ def sign_up():
 			return "There was an error signing up"
 	else:
 		return render_template("signup.html")
-	
+
+@app.route('/forgot_password.html', methods=["POST", "GET"])
+def forgot_password():
+	return render_template("forgot_pass.html")	
 
 if __name__ == "__main__":
 	app.run(debug = True)

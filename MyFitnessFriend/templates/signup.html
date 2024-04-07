@@ -16,6 +16,16 @@ div[name="UsersInDB"]
 .MainDivSU{
 		border:50px;
       	align-items: center;
+      	background-image: linear-gradient(rgb(51, 51, 51, 0.9), rgb(51, 51, 51, 0.9)), url({{ url_for("static", filename="SUPpg.jpg") }});
+    
+    padding-top: 50px;
+    padding-left: 50px;
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
 }
 input {
     
@@ -30,6 +40,9 @@ button{
     padding: 5px;
     margin: 5px;
     color: black;
+}
+body,html{
+	height:100%;
 }
 {%endblock%}
 {% block content%}

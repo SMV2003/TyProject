@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{%block title%}Forgot Password{% endblock%}
+{% block style%}
+h4{
+	color:whitesmoke;
+	padding: 20px 1px 1px 184px;
+}
+.MainDivFPass{
+		border:50px;
+      	align-items: center;
+      	background-image: linear-gradient(rgb(51, 51, 51, 0.9), rgb(51, 51, 51, 0.9)), url({{ url_for("static", filename="loginpg.jpg") }});
+    
+    padding-top: 50px;
+    padding-left: 50px;
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+input {
+    
+    border-radius: 50px;
+    padding: 5px;
+    margin: 5px;
+    color: black;
+}
+body,html{
+	height:100%;
+}
+
+{%endblock%}
+{% block content%}
+<div class="MainDivFPass">
+		<form action="/forgot_password.html" method="post" style="
+    padding: 45px;
+    color: white;
+    margin: auto;
+    margin-top: 40px;
+">
+		
+			<h1>Enter Username and New Password</h1> 
+		
+		
+			<label>Username</label>
+<input type="text" name="username" placeholder="Enter username">
+<br>
+	
+		
+			<label>New Password</label>
+<input type="password" name="password" placeholder="Enter password">
+<br>
+		
+		<input type="submit" value="Log In">
+		<h4>Don't Have an Account? <a href="{{url_for('sign_up')}}">Sign Up</a></h4>
+		
+	</form>
+
+
+</div>
+{% endblock%}
