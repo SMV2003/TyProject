@@ -28,9 +28,11 @@
 <body>
 <ul name="top_navbar">
 	<li name="site_name">FitJournal</li>
+  {% if session['username'] : %}
   <li name="logOutli"style=" float: right;">
     <a name="logOuta"href="{{ url_for('log_out') }}" style="padding: unset;">
     <button name="logOutbtn" style="border:0px; padding:5px; ">Log Out</button></li>
+  {% endif %}
   </a>
 </ul>
 
