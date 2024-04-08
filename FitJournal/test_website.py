@@ -29,7 +29,6 @@ class User(db.Model):
         self.password = password
         
 
-
 class Nutrition(db.Model):
     __tablename__ = 'nutritions'
 
@@ -56,24 +55,18 @@ class Nutrition(db.Model):
 with app.app_context():
 	db.create_all()
 
-
-@app.route('/', methods =["GET", "POST"])
+@app.route('/', methods=["GET", "POST"])
 def gfg():
-	check_if_in_session(session,"caloriereq",0,'h')
-	if request.method == "POST":
-		cal_intake = int(request.form.get("calorie_intake"))
-		session["caloriereq"] = cal_intake
-	check_if_in_session(session,"cal_burned",0,'h')
-	check_if_in_session(session,"calories",0,'h')
-	check_if_in_session(session,"protein",0,'h')
-	check_if_in_session(session,"fats",0,'h')
-	check_if_in_session(session,"carbs",0,'h')
-	
-	if "username" not in session:
-		return render_template('about.html')
-	return render_template("HomePage.html",Calorie_intake=session["caloriereq"],Calories=int(session["calories"]),Protein=session["protein"],Fats=session["fats"],Carbs=session["carbs"],Burnt=session["cal_burned"],username=session["username"])
-
-
+    check_if_in_session(session, "caloriereq", 0, 'h')
+    if request.method == "POST":
+        cal_intake = int(request.form.get("calorie_intake"))
+        session["caloriereq"] = cal_intake
+        print(cal_intake)
+    datentime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    session['datentime'] = datentime
+    if "username" not in session:
+        return render_template('about.html')
+    return redirect(url_for("home"))
 
 @app.route('/food.html',methods =["GET", "POST"])
 def food():
@@ -99,13 +92,39 @@ def food():
 		return render_template("SearchResults.html",food_s=size,name=foods_list[4],calories=foods_list[0],protein=foods_list[1],fats=foods_list[2],carbs=foods_list[3],num=len(foods_list[1]))
 	return render_template("food.html",flag=1)
 
-
-
 @app.route('/home.html')
 def home():
-    datentime=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    session['datentime']=datentime
-    return redirect(url_for("gfg"))
+    datentime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    session['datentime'] = datentime
+    if "username" not in session:
+        return render_template('about.html')
+    else:
+        all_user_records = Nutrition.query.filter_by(user_id=session['user_id']).all()
+        past_dates = []
+        past_calories = []
+        past_calories_burned = []
+        for record in all_user_records:
+            past_dates.append(record.datentime)
+            past_calories.append(record.calories_eaten)
+            past_calories_burned.append(record.calories_burned)
+
+        # Check if any of the lists are empty before assigning them to session
+        if past_dates and past_calories and past_calories_burned:
+            session['past_dates'] = past_dates
+            session['past_calories'] = past_calories
+            session['past_calories_burned'] = past_calories_burned
+
+        return render_template("HomePage.html",
+                               Calorie_intake=session.get("caloriereq", 0),
+                               Calories=int(session.get("calories", 0)),
+                               Protein=session.get("protein", 0),
+                               Fats=session.get("fats", 0),
+                               Carbs=session.get("carbs", 0),
+                               Burnt=session.get("cal_burned", 0),
+                               username=session.get("username", ""),
+                               past_dates=session.get('past_dates', []),
+                               past_calories=session.get('past_calories', []),
+                               past_calories_burned=session.get('past_calories_burned', []))
 
 
 @app.route('/exercise.html',methods =["GET", "POST"])
@@ -128,6 +147,7 @@ def exercise():
 		else:
 			return render_template('exercise.html',result=False,flag=0)
 	return render_template('exercise.html',result=False,flag=1)
+
 
 def get_calories_burned(activity, weight=160, duration=60, api_key=ekey):
     """
@@ -154,12 +174,12 @@ def get_calories_burned(activity, weight=160, duration=60, api_key=ekey):
     else:
         return None
 
+
 @app.route('/about.html',methods =["GET", "POST"])
 def about():
 	#if request.method == "POST":
 	#	meal1 = request.form.get("diary_meal_1")
 	return render_template("about.html")
-
 
 
 @app.route('/add_food',methods=["GET", "POST"])
@@ -188,6 +208,7 @@ def add_exercise():
         # Redirect to the exercise page
 		return redirect(url_for("exercise"))
 	return render_template('add_exercise.html')	
+
 
 @app.route('/log_in.html', methods=["POST", "GET"])
 def log_in():
@@ -240,9 +261,11 @@ def log_out():
 	# flash("You have been Logged Out!!!")
 	return render_template('about.html')
 
+
 @app.route('/profile.html')
 def profile():
 	return render_template('profile.html')
+
 
 @app.route('/signup.html',methods=["POST","GET"])
 def sign_up():
@@ -279,6 +302,7 @@ def forgot_password():
 					return "There was a problem in resetting password"
 			
 	return render_template("forgot_pass.html")	
+
 
 if __name__ == "__main__":
 	app.run(debug = True)
