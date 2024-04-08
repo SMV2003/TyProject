@@ -162,50 +162,57 @@ body,html{
     
   });
 </script>
-
 <script>
   const ctx3 = document.getElementById('myChart3');
-  
-  new Chart(ctx3, {
-    type: 'bar',
-    data: {
-      labels: ['1','2'],
-      datasets: [{
-        label: 'Calories Eaten',
-        data: [{{Calories}},2100],
-        backgroundColor:[
-        		'rgba(0, 255, 0, 0.72)',
-        	],
-        barThickness: 60,
-        
-        borderWidth: 1
+
+const pastDates = {{ past_dates|tojson }};
+const pastCalories = {{ past_calories|tojson }};
+const pastCaloriesBurned = {{ past_calories_burned|tojson }};
+const calorieIntake = {{ Calorie_intake|tojson }};  // corrected variable name
+
+// Convert JSON array to JavaScript array
+const pastCaloriesBurnedArray = pastCaloriesBurned;
+
+// Add each element of the array to the integer
+const combinedData = pastCaloriesBurnedArray.map(cal => cal + calorieIntake);
+
+new Chart(ctx3, {
+  type: 'bar',
+  data: {
+    labels: pastDates,
+    datasets: [{
+      label: 'Calories Eaten',
+      data: pastCalories,
+      backgroundColor:[
+        'rgba(0, 255, 0, 0.72)',
+      ],
+      barThickness: 60,
+      borderWidth: 1
+    },
+    {
+      label: 'Goal',
+      data: combinedData,  // Use the combined data
+      backgroundColor:[
+        'rgba(51, 51, 51, 1)'
+      ],
+      barThickness: 60,
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      x:{
+        stacked:true
       },
-      
-      {
-        label: 'Remaining',
-        data: [{{(Calorie_intake+Burnt)-Calories}},2600],
-        backgroundColor:[
-        		'rgba(51, 51, 51, 1)'
-        	],
-        barThickness: 60,
-        borderWidth: 1
-      }
-      ]
-    }
-    
-    ,
-    options: {
-      scales: {
-      	x:{
-      		stacked:true
-      	},
-        y: {
-          beginAtZero: true
-        }
+      y: {
+        beginAtZero: true
       }
     }
-  });
+  }
+});
+
 </script>
+
 
 </div>
 {% endblock%}
